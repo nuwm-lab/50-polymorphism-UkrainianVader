@@ -92,9 +92,6 @@ namespace LabWork
                 s.PrintCoefficients();           // virtual/override — resolved at runtime
                 Console.WriteLine($"Volume = {s.Volume():F4}\n"); // abstract implemented by derived
             }
-
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
         }
     }
 }
