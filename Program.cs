@@ -7,7 +7,8 @@ namespace LabWork
     // Необхідно змінювати і дописувати код лише в цьому проекті
     // Відео-інструкції щодо роботи з github можна переглянути 
     // за посиланням https://www.youtube.com/@ViktorZhukovskyy/videos 
-    abstract class Solid
+    // Base class implements IDisposable and a finalizer (destructor)
+    abstract class Solid : IDisposable
     {
         public double X { get; }
         public double Y { get; }
@@ -16,6 +17,7 @@ namespace LabWork
         protected Solid(double x, double y, double z)
         {
             X = x; Y = y; Z = z;
+            Console.WriteLine($"Solid created at ({X}, {Y}, {Z})");
         }
 
         // Return volume of the solid
@@ -25,6 +27,39 @@ namespace LabWork
         public virtual void PrintCoefficients()
         {
             Console.WriteLine($"Center: ({X}, {Y}, {Z})");
+        }
+
+        // --- IDisposable pattern ---
+        private bool _disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers.
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation to allow overrides in derived classes.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                // free managed resources here (none in this demo)
+                Console.WriteLine($"Disposing managed resources of Solid at ({X}, {Y}, {Z})");
+            }
+
+            // free unmanaged resources here (none in this demo)
+            Console.WriteLine($"Finalizing/cleaning native part of Solid at ({X}, {Y}, {Z})");
+
+            _disposed = true;
+        }
+
+        // Finalizer (destructor) — called by the GC if Dispose wasn't called.
+        ~Solid()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
         }
     }
     class Ellipsoid : Solid
@@ -51,6 +86,17 @@ namespace LabWork
             base.PrintCoefficients();
             Console.WriteLine($"Axes: a={A}, b={B}, c={C}");
         }
+
+        // Override disposal to demonstrate derived cleanup
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Console.WriteLine($"Disposing managed resources of Ellipsoid at ({X}, {Y}, {Z})");
+            }
+            Console.WriteLine($"Cleaning native part of Ellipsoid at ({X}, {Y}, {Z})");
+            base.Dispose(disposing);
+        }
     }
  class Sphere : Solid
     {
@@ -72,6 +118,16 @@ namespace LabWork
             Console.WriteLine("Sphere:");
             base.PrintCoefficients();
             Console.WriteLine($"Radius: {Radius}");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Console.WriteLine($"Disposing managed resources of Sphere at ({X}, {Y}, {Z})");
+            }
+            Console.WriteLine($"Cleaning native part of Sphere at ({X}, {Y}, {Z})");
+            base.Dispose(disposing);
         }
     }
     class Program
