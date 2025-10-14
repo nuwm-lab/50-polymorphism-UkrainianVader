@@ -31,7 +31,7 @@ namespace LabWork
         public abstract double Volume();
 
         // Print coefficients / parameters of the solid
-        public virtual void PrintCoefficients()
+        public void PrintCoefficients()
         {
             Console.WriteLine($"Center: ({X}, {Y}, {Z})");
         }
@@ -47,7 +47,7 @@ namespace LabWork
         }
 
         // Protected implementation to allow overrides in derived classes.
-        protected virtual void Dispose(bool disposing)
+    protected void Dispose(bool disposing)
         {
             if (_disposed) return;
             if (disposing)
@@ -95,7 +95,7 @@ namespace LabWork
             return (4.0 / 3.0) * Math.PI * A * B * C;
         }
 
-        public override void PrintCoefficients()
+        public void PrintEllipsoidCoefficients()
         {
             Console.WriteLine("Ellipsoid:");
             base.PrintCoefficients();
@@ -103,7 +103,7 @@ namespace LabWork
         }
 
         // Override disposal to demonstrate derived cleanup
-        protected override void Dispose(bool disposing)
+        protected void DisposeEllipsoid(bool disposing)
         {
             if (disposing)
             {
@@ -136,14 +136,14 @@ namespace LabWork
             return (4.0 / 3.0) * Math.PI * Math.Pow(Radius, 3);
         }
 
-        public override void PrintCoefficients()
+        public void PrintSphereCoefficients()
         {
             Console.WriteLine("Sphere:");
             base.PrintCoefficients();
             Console.WriteLine($"Radius: {Radius}");
         }
 
-        protected override void Dispose(bool disposing)
+        protected void DisposeSphere(bool disposing)
         {
             if (disposing)
             {
@@ -191,7 +191,7 @@ namespace LabWork
                 using (var s = new Sphere(0, 0, 0, sr))
                 {
                     s.SetCenter(sx, sy, sz);
-                    s.PrintCoefficients();
+                    s.PrintSphereCoefficients();
                     Console.WriteLine($"Volume = {s.Volume():F4}\n");
                 } // Dispose called here for Sphere
             }
@@ -248,7 +248,7 @@ namespace LabWork
             }
 
             ell.SetCenter(ex, ey, ez);
-            ell.PrintCoefficients();
+            ell.PrintEllipsoidCoefficients();
             Console.WriteLine($"Volume = {ell.Volume():F4}\n");
 
             // Force a GC to demonstrate finalizer behavior (for demo only)
